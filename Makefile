@@ -28,8 +28,10 @@ CXX = g++ -std=c++11
 LD= gcc -std=gnu11
 
 CXXFLAGS = -Wall $(DEBUG) $(PROFILE) $(OPT) $(ARCH) -m64 -I. -Iinclude
+CXXFLAGS += -I~/my_env/include/openssl
 
-LDFLAGS = $(DEBUG) $(PROFILE) $(OPT) -lpthread -lssl -lcrypto -lm
+LDFLAGS = $(DEBUG) $(PROFILE) $(OPT) -lpthread -lssl -lcrypto -lm 
+LDFLAGS += -L~/my_env/lib
 
 #
 # declaration of dependencies

@@ -1,0 +1,20 @@
+gcc -std=gnu11 -Wall   -Ofast -msse4.2 -D__SSE4_2_ -m64 -I. -Iinclude -I~/my_env/include/openssl  src/test.c -c -o obj/test.o
+src/test.c: In function 'main':
+src/test.c:229:14: warning: variable 'query' set but not used [-Wunused-but-set-variable]
+  229 |     uint64_t query;
+      |              ^~~~~
+src/test.c:200:9: warning: unused variable 'i' [-Wunused-variable]
+  200 |     int i = 0;
+      |         ^
+src/test.c:181:14: warning: unused variable 'negQueries' [-Wunused-variable]
+  181 |         char negQueries[100000][33];
+      |              ^~~~~~~~~~
+src/test.c:180:14: warning: unused variable 'posQueries' [-Wunused-variable]
+  180 |         char posQueries[100000][33];
+      |              ^~~~~~~~~~
+gcc -std=gnu11 obj/test.o obj/gqf.o obj/gqf_file.o obj/hashutil.o obj/partitioned_counter.o -o test   -Ofast -lpthread -lssl -lcrypto -lm  -L~/my_env/lib
+Time build + inserts: 1195.360000 seconds
+1951662794(at the end)
+Time queries: 266.650000 seconds
+Time queries: 189.180000 seconds
+Validated the CQF.
