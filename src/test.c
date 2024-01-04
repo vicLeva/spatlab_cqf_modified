@@ -201,6 +201,14 @@ int main(int argc, char **argv)
 
     printf("AHX_ACXIOSF_6_1_32_2andmore.txt\n");
     fp = fopen("/scratch/vlevallois/data/AHX_ACXIOSF_6_1_32_2andmore.txt", "r");
+    /*
+    printf("AHX_AMHIOSF_3_1_32_2andmore.txt\n");
+    fp = fopen("/scratch/vlevallois/data/AHX_AMHIOSF_3_1_32_2andmore.txt", "r");
+    */
+    /*
+    printf("AHX_ATRIOSF_7_1_32_2andmore.txt\n");
+    fp = fopen("/scratch/vlevallois/data/AHX_ATRIOSF_7_1_32_2andmore.txt", "r");
+    */
 
     while ((read = getline(&line, &len, fp)) != -1) {
 		kmer = strtok(line, "\t");
@@ -223,8 +231,10 @@ int main(int argc, char **argv)
 
     start = clock();  // Start the timer
 
-    fp = fopen("/scratch/vlevallois/data/pos_reads.fasta", "r"); 
+    fp = fopen("/scratch/vlevallois/data/6_1_reads.fasta", "r"); 
     //this file is basically reads from the original fastq, used to build the index 
+    //fp = fopen("/scratch/vlevallois/data/3_1_reads.fasta", "r"); 
+    //fp = fopen("/scratch/vlevallois/data/7_1_reads.fasta", "r"); 
 
     uint64_t query;
 
