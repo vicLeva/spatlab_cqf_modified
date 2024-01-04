@@ -202,16 +202,13 @@ int main(int argc, char **argv)
 	const char* kmer;
 	uint64_t count;
 
+    std::cout << "AHX_ACXIOSF_6_1_32_2andmore.txt \n"; 
     fp = fopen("/scratch/vlevallois/data/AHX_ACXIOSF_6_1_32_2andmore.txt", "r");
 
     while ((read = getline(&line, &len, fp)) != -1) {
 		kmer = strtok(line, "\t");
 		count = strtoull(strtok(NULL, "\t"), NULL, 0);
 		qf_insert(&qf, kmer_to_hash(kmer, 32), 0, count, QF_NO_LOCK);
-        i++;
-        if (i % 500000 == 0){
-            printf("%lu / 514 -> %lu\n", i, qf_get_num_occupied_slots(&qf));
-        }
         
         //printf("%s->%d\n", kmer, count);
     }
@@ -229,7 +226,7 @@ int main(int argc, char **argv)
 
     start = clock();  // Start the timer
 
-    fp = fopen("/home/genouest/genscale/vlevallois/data/queries.fasta", "r"); 
+    fp = fopen("/scratch/vlevallois/data/pos_reads.fasta", "r"); 
     //this file is basically reads from the original fastq, used to build the index 
 
     uint64_t query;
@@ -250,14 +247,14 @@ int main(int argc, char **argv)
 	end = clock();  // Stop the timer
 
 	elapsed_time = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time queries: %.6f seconds\n", elapsed_time);
+    printf("Time pos queries: %.6f seconds\n", elapsed_time);
 
     fclose(fp);
 
     start = clock();  // Start the timer
 
-    fp = fopen("/home/genouest/genscale/vlevallois/data/neg_queries.fasta", "r");
-    //this file is a file of randomly generated reads of length 70-110 nt
+    fp = fopen("/scratch/vlevallois/data/neg_reads.fasta", "r");
+    //this file is a file of randomly generated reads of length 80-120 nt
 
 
     while ((read = getline(&line, &len, fp)) != -1) {
@@ -276,98 +273,9 @@ int main(int argc, char **argv)
 	end = clock();  // Stop the timer
 
 	elapsed_time = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time queries: %.6f seconds\n", elapsed_time);
+    printf("Time neg queries: %.6f seconds\n", elapsed_time);
 
     fclose(fp);
-
-
-
-	/*printf("start veriff\n");
-
-	FILE * fp2;
-
-	int surestim = 0;
-    int totsurestim = 0;
-    int bug = 0;
-    
-    i = 0;
-    uint64_t query;
-    int count_limit = 0;
-
-	
-
-	 fp2 = fopen("/scratch/vlevallois/data/AHX_ACXIOSF_6_1_32_all.txt", "r");
-
-
-	while ((read = getline(&line, &len, fp2)) != -1) {
-		kmer = strtok(line, "\t");
-		count = strtoull(strtok(NULL, "\t"), NULL, 0);
-
-		if (kmer != NULL && i < 100000) {
-            strncpy(posQueries[i], kmer, 32);
-			posQueries[i][32] = '\0';
-		}
-
-		i++;
-		if (i%10000000 == 0){
-			printf("%f / 158\n", i/10000000.0);
-		}
-		
-
-		query = qf_count_key_value(&qf, kmer_to_hash(kmer, 32), 0, 0);
-
-		if (query > count){
-            surestim ++;
-            totsurestim = totsurestim + query - count;
-        } 
-        if (query < count){
-
-            printf("%s kmer--count %d  vs query : %s\n", kmer, count, query);
-            bug ++;
-        } 
-    }
-
-    fclose(fp2);
-    if (line)
-        free(line);
-
-    printf("nb elems inserted : %d \n", i);
-    printf("nb surestim : %d \n", surestim);
-    printf("avg surestim : %f \n", totsurestim / (double)surestim);
-    printf("nb bug : %d \n", bug);
-    printf("end verif\n"); */
-
-
-	/* srand(time(NULL));  // Seed the random number generator
-	for (int i = 0; i < 100000; i++) {
-        generate_random_kmer(negQueries[i]);
-    }
-
-	
-	start = clock();
-    for (int k = 0; k < 100; k++) {
-        for (int i = 0; i < 100000; i++) {
-                count_limit = qf_count_key_value(&qf, kmer_to_hash(negQueries[i], 32), 0, 0);
-            }
-    }
-	end = clock();  // Stop the timer
-
-	elapsed_time = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time 10.000.000 neg queries: %.6f seconds\n", elapsed_time);
-
-
-	start = clock();
-	for (int i = 0; i < 100000; i++) {
-        count_limit = qf_count_key_value(&qf, kmer_to_hash(posQueries[i], 32), 0, 0);
-    }
-	end = clock();  // Stop the timer
-
-	elapsed_time = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time 100k pos queries: %.6f seconds\n", elapsed_time); */
-
-
-
-
 
 	qf_free(&qf);
 
