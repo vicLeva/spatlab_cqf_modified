@@ -177,9 +177,6 @@ int main(int argc, char **argv)
 	uint64_t nhashbits = qbits + rbits;
 	uint64_t nslots = (1ULL << qbits);
 
-	char posQueries[100000][33];
-	char negQueries[100000][33];
-
 	clock_t start;
 	clock_t end;
 	double elapsed_time;
@@ -202,7 +199,7 @@ int main(int argc, char **argv)
 	const char* kmer;
 	uint64_t count;
 
-    std::cout << "AHX_ACXIOSF_6_1_32_2andmore.txt \n"; 
+    printf("AHX_ACXIOSF_6_1_32_2andmore.txt\n");
     fp = fopen("/scratch/vlevallois/data/AHX_ACXIOSF_6_1_32_2andmore.txt", "r");
 
     while ((read = getline(&line, &len, fp)) != -1) {
