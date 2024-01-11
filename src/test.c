@@ -199,8 +199,10 @@ int main(int argc, char **argv)
 	const char* kmer;
 	uint64_t count;
 
+    
     printf("AHX_ACXIOSF_6_1_32_2andmore.txt\n");
     fp = fopen("/scratch/vlevallois/data/AHX_ACXIOSF_6_1_32_2andmore.txt", "r");
+    
     /*
     printf("AHX_AMHIOSF_3_1_32_2andmore.txt\n");
     fp = fopen("/scratch/vlevallois/data/AHX_AMHIOSF_3_1_32_2andmore.txt", "r");
@@ -213,9 +215,9 @@ int main(int argc, char **argv)
     while ((read = getline(&line, &len, fp)) != -1) {
 		kmer = strtok(line, "\t");
 		count = strtoull(strtok(NULL, "\t"), NULL, 0);
-		qf_insert(&qf, kmer_to_hash(kmer, 32), 0, count, QF_NO_LOCK);
-        
+
         //printf("%s->%d\n", kmer, count);
+		qf_insert(&qf, kmer_to_hash(kmer, 32), 0, count, QF_NO_LOCK);
     }
 	end = clock();  // Stop the timer
 
@@ -228,7 +230,6 @@ int main(int argc, char **argv)
 	printf("%" PRIu64 "(at the end)\n", qf_get_num_occupied_slots(&qf));
 
     // QUERIES
-
     start = clock();  // Start the timer
 
     fp = fopen("/scratch/vlevallois/data/6_1_reads.fasta", "r"); 
@@ -236,12 +237,18 @@ int main(int argc, char **argv)
     //fp = fopen("/scratch/vlevallois/data/3_1_reads.fasta", "r"); 
     //fp = fopen("/scratch/vlevallois/data/7_1_reads.fasta", "r"); 
 
+
     uint64_t query;
 
     while ((read = getline(&line, &len, fp)) != -1) {
         line[strlen(line) - 1] = '\0';
         //printf("%s\n", line);
         //printf("%d\n", strlen(line));
+
+
+        if ((strlen(line) < 0) || (strlen(line) > 1500)){
+            exit(1);
+        }
 
         for (int i = 0; i <= strlen(line) - 32; i++) {
             char kmer[33];
