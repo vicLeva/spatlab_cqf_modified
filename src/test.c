@@ -7,6 +7,7 @@
  * ============================================================================
  */
 
+//#include "~/my_env/include/openssl/opensslconf.h"
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -17,7 +18,7 @@
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <unistd.h>
-#include <openssl/rand.h>
+//#include <openssl/rand.h>
 
 #include "include/gqf.h"
 #include "include/gqf_int.h"
@@ -186,41 +187,26 @@ int main(int argc, char **argv)
     size_t len = 0;
     ssize_t read;
 
-    // BUILD
+    fprintf(stdout, "Start expe.\n");
 
+    // BUILD
 	start = clock();  // Start the timer
 	qf_malloc(&qf, nslots, nhashbits, 0, QF_HASH_NONE, 0);
-
-
-	
 
     uint64_t i = 0;
 
 	const char* kmer;
 	uint64_t count;
 
-    
-    printf("AHX_ACXIOSF_6_1_32_2andmore.txt\n");
-    fp = fopen("/scratch/vlevallois/data/AHX_ACXIOSF_6_1_32_2andmore.txt", "r");
-    
-    /*
-    printf("AHX_AMHIOSF_3_1_32_2andmore.txt\n");
-    fp = fopen("/scratch/vlevallois/data/AHX_AMHIOSF_3_1_32_2andmore.txt", "r");
-    */
-    /*
-    printf("AHX_ATRIOSF_7_1_32_2andmore.txt\n");
-    fp = fopen("/scratch/vlevallois/data/AHX_ATRIOSF_7_1_32_2andmore.txt", "r");
-    */
+    fp = fopen("~/data/6_1_32_counted", "r");
 
     while ((read = getline(&line, &len, fp)) != -1) {
 		kmer = strtok(line, "\t");
 		count = strtoull(strtok(NULL, "\t"), NULL, 0);
 
-        //printf("%s->%d\n", kmer, count);
 		qf_insert(&qf, kmer_to_hash(kmer, 32), 0, count, QF_NO_LOCK);
     }
 	end = clock();  // Stop the timer
-
 
 	elapsed_time = (double)(end - start) / CLOCKS_PER_SEC;
     printf("Time build + inserts: %.6f seconds\n", elapsed_time);
@@ -232,30 +218,18 @@ int main(int argc, char **argv)
     // QUERIES
     start = clock();  // Start the timer
 
-    fp = fopen("/scratch/vlevallois/data/6_1_reads.fasta", "r"); 
+    fp = fopen("~/data/6_1_reads.fasta", "r"); 
     //this file is basically reads from the original fastq, used to build the index 
-    //fp = fopen("/scratch/vlevallois/data/3_1_reads.fasta", "r"); 
-    //fp = fopen("/scratch/vlevallois/data/7_1_reads.fasta", "r"); 
-
 
     uint64_t query;
-
     while ((read = getline(&line, &len, fp)) != -1) {
         line[strlen(line) - 1] = '\0';
-        //printf("%s\n", line);
-        //printf("%d\n", strlen(line));
-
-
-        if ((strlen(line) < 0) || (strlen(line) > 1500)){
-            exit(1);
-        }
 
         for (int i = 0; i <= strlen(line) - 32; i++) {
             char kmer[33];
             strncpy(kmer, line + i, 32);
             kmer[32] = '\0';
             query = qf_count_key_value(&qf, canonical_code_to_hash(canonical(encode_for_canonical(kmer), 64), 32), 0, 0);
-            //printf("32-mer : %s, %d\n", kmer, query);
         }
     }
 	end = clock();  // Stop the timer
@@ -266,22 +240,18 @@ int main(int argc, char **argv)
     fclose(fp);
 
     start = clock();  // Start the timer
-
-    fp = fopen("/scratch/vlevallois/data/neg_reads.fasta", "r");
+    fp = fopen("~/data/neg_reads.fasta", "r");
     //this file is a file of randomly generated reads of length 80-120 nt
 
 
     while ((read = getline(&line, &len, fp)) != -1) {
         line[strlen(line) - 1] = '\0';
-        //printf("%s\n", line);
-        //printf("%d\n", strlen(line));
 
         for (int i = 0; i <= strlen(line) - 32; i++) {
             char kmer[33];
             strncpy(kmer, line + i, 32);
             kmer[32] = '\0';
             query = qf_count_key_value(&qf, canonical_code_to_hash(canonical(encode_for_canonical(kmer), 64), 32), 0, 0);
-            //printf("32-mer : %s, %d\n", kmer, query);
         }
     }
 	end = clock();  // Stop the timer
@@ -290,10 +260,6 @@ int main(int argc, char **argv)
     printf("Time neg queries: %.6f seconds\n", elapsed_time);
 
     fclose(fp);
-
 	qf_free(&qf);
-
-	fprintf(stdout, "Validated the CQF.\n");
-
-	#include "/home/genouest/genscale/vlevallois/my_env/include/openssl/opensslconf.h"
+	fprintf(stdout, "Validated the expe.\n");
 }

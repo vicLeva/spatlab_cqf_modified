@@ -1,4 +1,21 @@
 # cqf
+
+## BQF paper experiment note
+
+preprocessing data step : (count 32-mers with KMC, see [wiki](https://github.com/vicLeva/bqf/wiki/Experiments-details-and-protocol-for-BQF-paper-results))
+
+`spatlab_cqf_modified/src/test.c` (main executable) has been modified so that when compiled the main tool `test` runs experiments on sea-water34M dataset (first available in [wiki](https://github.com/vicLeva/bqf/wiki/Experiments-details-and-protocol-for-BQF-paper-results), dataset has to be downloaded first).
+
+Paths in `spatlab_cqf_modified/src/test.c` may need to me modified.
+
+then (parameters for sea-water34M dataset)
+```bash
+make test
+./test 30 34
+```
+
+## original README
+
 A General-Purpose Counting Filter: Counting Quotient Filter (CQF)
 
 This work appeared at SIGMOD 2017. If you use this software please cite us:
